@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Поиск книги</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="search-container">
+    <input type="text" id="search-input" placeholder="Введите название книги">
+    <button id="search-btn">Поиск</button>
+  </div>
+  <script>
+    // Функция для отправки данных в Google Таблицу
+    function addDataToSheet() {
+        // Замените 'YOUR_SHEET_ID' на ID вашей Google Таблицы
+        const sheetId = '1fCaJ-p_7rM8hVbHRwQMkitUxk8XUtkxe_TlvLg8dB6A';
+        // Замените 'YOUR_API_KEY' на ваш API ключ
+        const apiKey = 'AIzaSyAyRlnf3F47Z6IqxW1sv2Ys0dCe4TwTbbY';
+
+        // Получаем значения полей ввода
+        const bookTitle = document.getElementById('bookTitle').value;
+        const authorName = document.getElementById('authorName').value;
+
+        // Формируем URL для отправки запроса на добавление данных
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/Sheet1!A1:B1:append?valueInputOption=RAW&key=${apiKey}`;
+
+        // Формируем данные для отправки в формате JSON
+        const requestData = {
+            values: [[bookTitle, authorName]]
+        };
+
+        // Отправляем запрос POST с данными
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(requestData),
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Данные успешно добавлены в Google Таблицу:', data);
+            alert('Данные успешно добавлены в Google Таблицу!');
+        })
+        .catch((error) => {
+            console.error('Произошла ошибка:', error);
+            alert('Произошла ошибка при добавлении данных в Google Таблицу.');
+        });
+    }
+</script>
+  <div id="search-results"></div>
+  <script src="https://apis.google.com/js/api.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
